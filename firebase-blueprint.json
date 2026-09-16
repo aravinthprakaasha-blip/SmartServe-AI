@@ -1,0 +1,155 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Authenticated user profile and role within the restaurant organization",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Unique Firebase Authentication UID", "maxLength": 128 },
+        "email": { "type": "string", "description": "User email address", "maxLength": 128 },
+        "displayName": { "type": "string", "description": "User display name", "maxLength": 128 },
+        "photoURL": { "type": "string", "description": "User avatar URL", "maxLength": 512 },
+        "role": { "type": "string", "description": "User permissions role", "enum": ["owner", "manager", "chef", "staff"] },
+        "createdAt": { "type": "string", "description": "Timestamp when the account was registered", "maxLength": 64 }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "DishItem": {
+      "title": "DishItem",
+      "description": "Live restaurant dish catalog with pricing and dynamic AI prep targets",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Dish unique identifier", "maxLength": 64 },
+        "name": { "type": "string", "description": "Dish culinary title", "maxLength": 128 },
+        "category": { "type": "string", "description": "Menu category", "maxLength": 64 },
+        "priceINR": { "type": "number", "description": "Base selling price in INR" },
+        "historicalDemandAvg": { "type": "number", "description": "Average demand" },
+        "predictedDemand": { "type": "number", "description": "Real-time AI forecasted demand" },
+        "recommendedPrep": { "type": "number", "description": "Recommended prep portion quantity" },
+        "prepTimeMinutes": { "type": "number", "description": "Kitchen prep time in minutes" },
+        "shelfLifeHours": { "type": "number", "description": "Freshness shelf life window in hours" },
+        "updatedAt": { "type": "string", "description": "Last updated ISO date timestamp", "maxLength": 64 }
+      },
+      "required": ["id", "name", "category", "priceINR", "predictedDemand", "recommendedPrep"]
+    },
+    "InventoryIngredient": {
+      "title": "InventoryIngredient",
+      "description": "Live raw ingredient inventory with stock monitoring and par levels",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Ingredient unique identifier", "maxLength": 64 },
+        "name": { "type": "string", "description": "Ingredient trade name", "maxLength": 128 },
+        "category": { "type": "string", "description": "Ingredient storage category", "maxLength": 64 },
+        "currentStock": { "type": "number", "description": "Current on-hand quantity" },
+        "parLevel": { "type": "number", "description": "Minimum par stock threshold" },
+        "unit": { "type": "string", "description": "Measurement unit e.g. kg, L", "maxLength": 32 },
+        "costPerUnitINR": { "type": "number", "description": "Wholesale procurement unit cost in INR" },
+        "shelfLifeDays": { "type": "number", "description": "Shelf life in days" },
+        "daysRemaining": { "type": "number", "description": "Estimated days of stock buffer" },
+        "status": { "type": "string", "description": "Inventory safety level", "enum": ["In Stock", "Low Stock", "Critical"] },
+        "updatedAt": { "type": "string", "description": "Last modified timestamp", "maxLength": 64 }
+      },
+      "required": ["id", "name", "category", "currentStock", "parLevel", "unit", "costPerUnitINR", "status"]
+    },
+    "WasteRecord": {
+      "title": "WasteRecord",
+      "description": "Live kitchen food loss log tracking wasted portions and root causes",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Waste entry identifier", "maxLength": 64 },
+        "date": { "type": "string", "description": "Date of recorded waste occurrence", "maxLength": 32 },
+        "dishId": { "type": "string", "description": "Related dish or ingredient identifier", "maxLength": 64 },
+        "dishName": { "type": "string", "description": "Culinary item or ingredient name", "maxLength": 128 },
+        "quantityWasted": { "type": "number", "description": "Quantity discarded" },
+        "unit": { "type": "string", "description": "Unit of measurement", "maxLength": 32 },
+        "wasteReason": { "type": "string", "description": "Root cause category", "enum": ["Over-Preparation", "Spoilage", "Cooking Error", "Customer Return", "Expired Shelf-Life"] },
+        "mealPeriod": { "type": "string", "description": "Shift period when waste occurred", "enum": ["Morning", "Lunch", "Evening", "Dinner"] },
+        "estimatedCostINR": { "type": "number", "description": "Financial loss estimate in INR" },
+        "recordedBy": { "type": "string", "description": "Staff member or chef who logged the loss", "maxLength": 128 }
+      },
+      "required": ["id", "date", "dishName", "quantityWasted", "unit", "wasteReason", "estimatedCostINR"]
+    },
+    "RestaurantEvent": {
+      "title": "RestaurantEvent",
+      "description": "Scheduled local events and holiday impact multipliers",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique event identifier", "maxLength": 64 },
+        "title": { "type": "string", "description": "Event headline", "maxLength": 128 },
+        "date": { "type": "string", "description": "Scheduled event date", "maxLength": 32 },
+        "impactMultiplier": { "type": "number", "description": "Expected customer footfall multiplier" },
+        "expectedCrowd": { "type": "string", "description": "Crowd density rating", "enum": ["LOW", "MEDIUM", "HIGH", "VERY_HIGH"] },
+        "category": { "type": "string", "description": "Event classification", "enum": ["Festival", "Sports", "Holiday", "Corporate", "Weather"] }
+      },
+      "required": ["id", "title", "date", "impactMultiplier", "expectedCrowd", "category"]
+    },
+    "SystemSettings": {
+      "title": "SystemSettings",
+      "description": "Operating parameters and AI forecast buffers for the restaurant",
+      "type": "object",
+      "properties": {
+        "restaurantName": { "type": "string", "description": "Establishment trade name", "maxLength": 128 },
+        "location": { "type": "string", "description": "City or operational territory", "maxLength": 128 },
+        "operatingHours": { "type": "string", "description": "Daily service hours window", "maxLength": 64 },
+        "currency": { "type": "string", "description": "Standard currency symbol", "maxLength": 16 },
+        "defaultSafetyBufferPercent": { "type": "number", "description": "Overprep margin percentage buffer" },
+        "weatherIntegrationEnabled": { "type": "boolean", "description": "Toggle weather impact multiplier" },
+        "eventIntegrationEnabled": { "type": "boolean", "description": "Toggle holiday and local event multipliers" },
+        "lowStockAlerts": { "type": "boolean", "description": "Toggle push warnings on critical stockouts" },
+        "highWasteAlerts": { "type": "boolean", "description": "Toggle alerts on excessive waste spikes" }
+      },
+      "required": ["restaurantName", "location", "operatingHours", "currency", "defaultSafetyBufferPercent"]
+    },
+    "SalesRecord": {
+      "title": "SalesRecord",
+      "description": "Live real-time operational sales orders and meal batch transactions entered by restaurant staff",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique sales record identifier", "maxLength": 64 },
+        "date": { "type": "string", "description": "Service date YYYY-MM-DD", "maxLength": 32 },
+        "time": { "type": "string", "description": "Service time e.g. 12:30 PM", "maxLength": 32 },
+        "dishId": { "type": "string", "description": "Culinary dish identifier", "maxLength": 64 },
+        "dishName": { "type": "string", "description": "Culinary dish name", "maxLength": 128 },
+        "quantityPrepared": { "type": "number", "description": "Quantity prepared in batch" },
+        "quantitySold": { "type": "number", "description": "Quantity sold to guests" },
+        "quantityRemaining": { "type": "number", "description": "Quantity remaining on line" },
+        "quantityWasted": { "type": "number", "description": "Quantity discarded" },
+        "mealPeriod": { "type": "string", "description": "Service period", "enum": ["Morning", "Lunch", "Evening", "Dinner"] },
+        "sellingPrice": { "type": "number", "description": "Selling price per portion in INR" },
+        "totalSales": { "type": "number", "description": "Total revenue in INR" },
+        "createdAt": { "type": "string", "description": "Creation ISO timestamp", "maxLength": 64 }
+      },
+      "required": ["id", "date", "time", "dishId", "dishName", "quantityPrepared", "quantitySold", "quantityRemaining", "quantityWasted", "mealPeriod", "sellingPrice", "totalSales"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Private user profiles restricted to authenticated users"
+    },
+    "/salesRecords/{saleId}": {
+      "schema": "SalesRecord",
+      "description": "Live restaurant service orders and sales logged in real-time by kitchen staff"
+    },
+    "/dishes/{dishId}": {
+      "schema": "DishItem",
+      "description": "Live dish inventory and AI prep targets for authenticated restaurant staff"
+    },
+    "/ingredients/{ingredientId}": {
+      "schema": "InventoryIngredient",
+      "description": "Live raw ingredient inventory ledger"
+    },
+    "/wasteRecords/{recordId}": {
+      "schema": "WasteRecord",
+      "description": "Live waste logs submitted by kitchen staff"
+    },
+    "/restaurantEvents/{eventId}": {
+      "schema": "RestaurantEvent",
+      "description": "External multipliers and scheduled local events"
+    },
+    "/settings/current": {
+      "schema": "SystemSettings",
+      "description": "Global operational and AI parameters"
+    }
+  }
+}

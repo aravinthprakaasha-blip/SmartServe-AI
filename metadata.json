@@ -1,0 +1,6 @@
+{
+  "name": "RestoAI Demand & Inventory",
+  "description": "AI-Powered Restaurant Demand Forecasting and Smart Inventory Management System",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
